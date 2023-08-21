@@ -15,10 +15,9 @@ const LeavesObj = ({ leave , token, studentName }) => {
                   ? "status_approved"
                   : "status_rejected"
               }`}
-              
-            >
-              {leave.status}
-            </div>
+          >
+            {leave.status}
+          </div>
         </div>
       <div className="leave-details">
         <div className="leave-details-text">
@@ -138,7 +137,7 @@ export const Leaves = () => {
 
   // FUNCTIONS for DATE
   const currentDate = new Date();
-  const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+  // const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
   const currentYear = currentDate.getFullYear().toString();
 
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -312,8 +311,6 @@ export const Leaves = () => {
             leave={selectedLeave}
             token={token}
             onClose={handlePopupClose}
-            // onApprove={handleApprove} 
-            // onReject={handleReject}
           />
         )}
 

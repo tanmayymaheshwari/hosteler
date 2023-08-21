@@ -1404,76 +1404,6 @@ input[type="password"] {
   background-color: #e7ffef;
   color: black;
 }
-.att-box {
-  border-radius: 10px;
-  background-color: #242424;
-  padding: 10px;
-  position: relative;
-}
-.att-container {
-  display: flex;
-  flex-direction: column;
-  /* justify-content: space-evenly;
-  align-items: center; */
-}
-
-.calendar {
-  color: black;
-}
-
-.calendar .react-datepicker {
-  font-family: Arial, sans-serif;
-  background-color: white;
-  border: 1px solid #ccc;
-}
-
-.calendar .react-datepicker__header {
-  background-color: #f0f0f0;
-  border-bottom: none;
-}
-
-.calendar .react-datepicker__current-month {
-  font-weight: bold;
-}
-
-.calendar .react-datepicker__day-names {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 8px;
-}
-
-.calendar .react-datepicker__day-name {
-  color: black;
-}
-
-.calendar .react-datepicker__day {
-  color: black;
-}
-
-.calendar .react-datepicker__day--selected {
-  background-color: #ccc;
-  color: black;
-}
-
-.calendar .react-datepicker__day--today {
-  font-weight: bold;
-}
-
-.calendar .react-datepicker__day:hover {
-  background-color: #f0f0f0;
-  color: black;
-}
-
-.calendar .react-datepicker__input-container {
-  display: inline-block;
-}
-
-.calendar .react-datepicker__input-container input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
 
 .floor-buttons {
   display: flex;
@@ -1502,29 +1432,37 @@ input[type="password"] {
   color: #fff;
 }
 
+.att-box {
+  background-color: #242424;
+  position: relative;
+  border-radius: 10px;
+}
+.att-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+}
 .att-room {
   font-size: 20px;
-  color: #adadad;
+  color: #1d1d1d;
 }
 .att-num {
   font-size: 40px;
   font-weight: bold;
 }
-.att-room.present {
-  color: #008000;
+.att-container.present {
+  background-color: #ccf7cc;
 }
-.att-room.absent {
-  color: #fe3232;
+.att-container.absent {
+  background-color: #ffbebe;
 }
-.att-room.on-leave {
-  color: #ffea00;
+.att-container.leave {
+  background-color: #fff9b1;
 }
-.att-room.vacant {
-  color: #adadad;
+.att-container.vacant {
+  background-color: #adadad;
 }
-/* .att-room-no {
-  color: #e7ffef;
-} */
 
 .hover-details {
   transition: 0.3s;
@@ -1548,12 +1486,6 @@ input[type="password"] {
   z-index: 1;
 }
 
-.att-details {
-  display: flex;
-  flex-direction: row;
-  font-size: 18px;
-}
-
 .att-title {
   display: flex;
   flex-direction: column;
@@ -1570,13 +1502,11 @@ input[type="password"] {
   font-weight: 500;
   margin-left: 10px;
 }
-
 .att-grid-container {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 10px;
 }
-
 .att-grid-item {
   margin-left: 2px;
   margin-right: 2px;
@@ -1584,46 +1514,69 @@ input[type="password"] {
   position: relative;
 }
 
-.attendance-form {
-  margin-top: 10px;
-}
-.attendance-form .form-group {
-  margin-bottom: 0px;
-}
-.attendance-form label {
- padding:0;
-}
-.attendance-form .checkbox-options {
+.room-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
-  flex-direction: column;
-  align-items: start;
-}
-.attendance-form .checkbox-options label {
-  margin-left: 30px;
-  display: flex;
-  flex-direction: row;
   justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
-
-.attendance-form .form-actions {
+.room-popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  width: 300px;
+}
+.room-popup-content h1 {
+  font-size: 20px;
+}
+.room-popup-content h2 {
+  padding-bottom: 10px;
+}
+.room-checkbox-options {
   display: flex;
-  flex-direction: row;
-  margin-top: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
-.attendance-form .btn {
+.room-checkbox-options label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.room-checkbox-options input[type="radio"] {
   margin-right: 5px;
+}
+.room-btn {
+  cursor: pointer;
   border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 500;
+  transition: background-color 0.3s;
+  margin-left: 5px;
+  margin-right: 5px;
 }
-.attendance-form .btn:hover {
-  background-color: #555;
+.btn-primary {
+  background-color: #424242;
 }
-.attendance-form .btn-primary {
-  background-color: #242424;
-  color: #e7ffef;
+.btn-primary:hover {
+  background-color: #777777;
 }
-.attendance-form .btn-secondary {
-  background-color: #242424;
-  color: #e7ffef;
+.room-close-button {
+  background-color: #e5e5e5;
+  color: #333;
+}
+.room-close-button:hover {
+  background-color: #ccc;
 }
 
 /* ///////////////////////////////////    ATTENDANCE     //////////////////////////////////*/

@@ -1,42 +1,38 @@
-// import React, { useState, useEffect } from 'react';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
+// import React, { useState, useEffect, useRef } from 'react';
+// import axios from 'axios';
 
-// const AttBlock = ({ roomnum, name, roll, present, onAttendanceChange, date }) => {
+// const AttBlock = ({ room , token }) => {
+
 //   const [isHovered, setIsHovered] = useState(false);
-//   const [isFormOpen, setIsFormOpen] = useState(false);
-//   const [newPresent, setNewPresent] = useState(present);
 
+//   // Hovering on Attendance Tile
 //   const handleMouseEnter = () => {
 //     setIsHovered(true);
 //   };
-
 //   const handleMouseLeave = () => {
 //     setIsHovered(false);
 //   };
 
-//   const handleAttendanceChange = () => {
-//     onAttendanceChange(roomnum, newPresent, date);
-//     setIsFormOpen(false);
-//   };
-
-//   const handleCancel = () => {
-//     setNewPresent(present);
-//     setIsFormOpen(false);
-//   };
-
 //   return (
 //     <div className="att-box" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-//       <div className={`att-container`}>
+//       <div className={`att-container ${
+//                 room.status === "PRESENT"
+//                   ? "present"
+//                   : room.status === "ABSENT"
+//                   ? "absent"
+//                   : room.status === "LEAVE"
+//                   ? "leave"
+//                   : "vacant"
+//               }`}
+//           >
 //         <div
-//           className={`att-room ${newPresent.toLowerCase()}`}
-//           onClick={() => setIsFormOpen(true)}
+//           className={"att-room"}
 //         >
 //           <div className="att-room-no">ROOM NO</div>
-//           <div className="att-num">{roomnum}</div>
+//           <div className="att-num">{room.room_number}</div>
 //         </div>
 
-//         {isHovered && present !== 'VACANT' && (
+//         {isHovered && room.status !== 'VACANT' && (
 //           <div className="hover-details">
 //             <div className="att-title">
 //               <ul>Name</ul>
@@ -49,60 +45,88 @@
 //               <ul>:</ul>
 //             </div>
 //             <div className="att-variable">
-//               <ul>{name}</ul>
-//               <ul>{roll}</ul>
-//               <ul>{present}</ul>
+//               <ul>{room.studentName}</ul>
+//               <ul>{room.student}</ul>
+//               <ul>{room.status}</ul>
 //             </div>
 //           </div>
 //         )}
 
-//         {isFormOpen && (
-//           <div className="attendance-form">
-//             <div className="form-group">
-//               <label htmlFor={`present-${roomnum}`}></label>
-//               <div className="checkbox-options">
-//                 <label>
-//                   <input
-//                     type="radio"
-//                     name={`present-${roomnum}`}
-//                     value="PRESENT"
-//                     checked={newPresent === 'PRESENT'}
-//                     onChange={() => setNewPresent('PRESENT')}
-//                   />
-//                   Present
-//                 </label>
-//                 <label>
-//                   <input
-//                     type="radio"
-//                     name={`present-${roomnum}`}
-//                     value="ABSENT"
-//                     checked={newPresent === 'ABSENT'}
-//                     onChange={() => setNewPresent('ABSENT')}
-//                   />
-//                   Absent
-//                 </label>
-//                 <label>
-//                   <input
-//                     type="radio"
-//                     name={`present-${roomnum}`}
-//                     value="ON-LEAVE"
-//                     checked={newPresent === 'ON-LEAVE'}
-//                     onChange={() => setNewPresent('ON-LEAVE')}
-//                   />
-//                   On Leave
-//                 </label>
-//               </div>
-//             </div>
-//             <div className="form-actions">
-//               <button className="btn btn-primary" onClick={handleAttendanceChange}>
-//                 Save
-//               </button>
-//               <button className="btn btn-secondary" onClick={handleCancel}>
-//                 Cancel
-//               </button>
-//             </div>
-//           </div>
-//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+
+// const RoomPopup = ({ room, token, onClose }) => {
+
+//   const [selectedStatus, setSelectedStatus] = useState(room.status);
+
+//   const handleAttendanceChange = async () => {
+//     try {
+//       const config = {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       };
+//       await axios.put(
+//         `https://hosteler-backend.onrender.com/base/attendance/update/${room.student}/`,
+//         { status: selectedStatus },
+//         config
+//       );
+//       onClose();
+//       window.location.reload();
+//     } catch (error) {
+//       console.error("Error approving leave:", error);
+//     }
+//   };
+
+//   return (
+//     <div className="room-popup">
+//       <div className="room-popup-content">
+//         <h1>ROOM NO</h1>
+//         <h2>{room.room_number}</h2>
+//         <div className="room-checkbox-options">
+
+//           <label>
+//             <input
+//               type="radio"
+//               name={`status-${room.room_number}`}
+//               value="PRESENT"
+//               checked={selectedStatus  === 'PRESENT'}
+//               onChange={() => setSelectedStatus('PRESENT')}
+//             />
+//             Present
+//           </label>
+
+//           <label>
+//             <input
+//               type="radio"
+//               name={`status-${room.room_number}`}
+//               value="ABSENT"
+//               checked={selectedStatus  === 'ABSENT'}
+//               onChange={() => setSelectedStatus('ABSENT')}
+//             />
+//             Absent
+//           </label>
+
+//           <label>
+//             <input
+//               type="radio"
+//               name={`status-${room.room_number}`}
+//               value="LEAVE"
+//               checked={selectedStatus  === 'LEAVE'}
+//               onChange={() => setSelectedStatus('LEAVE')}
+//             />
+//             On Leave
+//           </label>
+
+//         </div>
+//         <button className="room-btn btn-primary" onClick={handleAttendanceChange}>
+//           Update
+//         </button>
+//         <button className="room-btn btn-primary" onClick={onClose}>Close</button>
+
 //       </div>
 //     </div>
 //   );
@@ -110,63 +134,105 @@
 
 
 // export const Attendance = () => {
-  
-//   const [attArray, setAttArray] = useState([]);
+
+//   // TOKEN GENERATED ON LOGIN
+//   const user = useRef();
+//   user.current = JSON.parse(localStorage.getItem("userInfo"));
+//   let token = user.current.data.token;
+
+//   const [attGrid, setAttGrid] = useState([]);
 //   const [selectedFloor, setSelectedFloor] = useState('GROUND');
-//   const [selectedDate, setSelectedDate] = useState(new Date());
+//   // const [selectedDate, setSelectedDate] = useState(new Date());
+
+//   const [selectedRoom, setSelectedRoom] = useState(null);
+//   const [popupVisible, setPopupVisible] = useState(false);
+
+//  // FETCH ATTENDANCE DETAILS
+//   const fetchAttendanceData = async () => {
+//     try {
+//       const config={
+//           headers:{
+//             Authorization: `Bearer ${token}`
+//           }
+//         }
+
+//         const responseRoom = await axios.get(
+//           `https://hosteler-backend.onrender.com/base/room/`,config
+//         );
+
+//         const roomDataPromises = responseRoom.data;
+//         const vacantRooms = roomDataPromises.filter(room => room.occupancy_status === "VACANT");
+//         const occupiedRooms = roomDataPromises.filter(room => room.occupancy_status === "OCCUPIED");
+        
+//         const roomsWithDetailsPromises = occupiedRooms.map(async room => {
+
+//           const response = await axios.get(
+//             `https://hosteler-backend.onrender.com/base/attendance/${room.student}/`,config
+//           );
+//           // console.log(10,room); //Basic Occupied Room
+          
+//           const studentDataPromises = response.data.map(async att => {
+//             const studentResponse = await axios.get(
+//               `https://hosteler-backend.onrender.com/base/student/${att.student}/`,
+//               config
+//               );
+//               const student = studentResponse.data;
+//               return {
+//                 ...att,
+//                 studentName: `${student.first_name} ${student.last_name}`
+//               };
+//             });
+
+//             const roomsWithStudentName = await Promise.all(studentDataPromises);
+//             // console.log(20,roomsWithStudentName) //Attendance with Name
+
+//           return {
+//               ...room,
+//               status: `${roomsWithStudentName[0]?.status}`,
+//               studentName: `${roomsWithStudentName[0]?.studentName}`,
+//               date: `${roomsWithStudentName[0]?.date}`
+//             }
+//           })
+
+//           const roomsWithDetails = await Promise.all(roomsWithDetailsPromises);
+//           // console.log(30,roomsWithDetails)
+//           const hostelRooms = [...vacantRooms, ...roomsWithDetails];
+//           hostelRooms.sort((a, b) => a.room_number - b.room_number);
+//           setAttGrid(hostelRooms);
+//           console.log(attGrid)
+//       }
+//       catch (error) {
+//         console.error("Error fetching resource details:", error);
+//         }
+//       };
+
+//   useEffect(() => {
+//     fetchAttendanceData();
+//   }, []);
 
 //   const handleFloorChange = (floor) => {
 //     setSelectedFloor(floor);
 //   };
-
-//   const handleDateChange = (date) => {
-//     setSelectedDate(date);
+//   const handlePopupOpen = (room) => {
+//     setSelectedRoom(room);
+//     setPopupVisible(true);
+//   };
+//   const handlePopupClose = () => {
+//     setSelectedRoom(null);
+//     setPopupVisible(false);
 //   };
 
-//   const handleAttendanceChange = (roomnum, newPresent, date) => {
-//     const updatedArray = attArray.map((room) => {
-//       if (room.roomnum === roomnum && room.date.getTime() === date.getTime()) {
-//         return { ...room, present: newPresent };
-//       }
-//       return room;
-//     });
-//     setAttArray(updatedArray);
-//   };
-
-//   useEffect(() => {
-//     // Fetch attendance data based on selectedFloor and selectedDate
-//     // Replace this with your actual API call or data retrieval logic
-//     const fetchAttendanceData = async () => {
-//       // Simulating API call delay with setTimeout
-//       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-//       // Sample attendance data for demonstration
-//       const attendanceData = [
-//         // GROUND FLOOR: Room numbers 1-99
-//         { roomnum: 1, name: 'John Doe', roll: 123, present: 'PRESENT', date: new Date("2023-07-10") },
-//         { roomnum: 2, name: 'Jane Smith', roll: 456, present: 'ON-LEAVE', date: new Date("2023-07-10") },
-//         { roomnum: 3, name: 'Alice Johnson', roll: 789, present: 'ABSENT', date: new Date("2023-07-10") },
-//         { roomnum: 99, name: 'Some Name', roll: 999, present: 'PRESENT', date: new Date("2023-07-11") },
-//         // Add more attendance data for different floors and dates
-//       ];
-
-//       setAttArray(attendanceData);
-//     };
-
-//     fetchAttendanceData();
-//   }, [selectedFloor, selectedDate]);
-
-//   const filteredRooms = attArray.filter((room) => {
+//   const filteredRooms = attGrid.filter((room) => {
 //     if (selectedFloor === 'GROUND') {
-//       return room.roomnum >= 1 && room.roomnum <= 99;
+//       return room.room_number >= 1 && room.room_number <= 99;
 //     } else if (selectedFloor === '1ST FLOOR') {
-//       return room.roomnum >= 100 && room.roomnum <= 199;
+//       return room.room_number >= 100 && room.room_number <= 199;
 //     } else if (selectedFloor === '2ND FLOOR') {
-//       return room.roomnum >= 200 && room.roomnum <= 299;
+//       return room.room_number >= 200 && room.room_number <= 299;
 //     } else if (selectedFloor === '3RD FLOOR') {
-//       return room.roomnum >= 300 && room.roomnum <= 399;
+//       return room.room_number >= 300 && room.room_number <= 399;
 //     }
-//     return true; // If none of the floors match, return all rooms
+//     return true;
 //   });
 
 //   return (
@@ -176,10 +242,6 @@
 //           <div className="col-md-8 col-md-offset-2 section-title">
 //             <h2>ATTENDANCE</h2>
 //           </div>
-//         </div>
-
-//         <div className="date-picker">
-//           <DatePicker selected={selectedDate} onChange={handleDateChange} />
 //         </div>
 
 //         <div className="floor-buttons">
@@ -209,20 +271,24 @@
 //           </button>
 //         </div>
 
-//         <div className="att-grid-container">
-//           {filteredRooms.map((room, index) => (
-//             <div className="att-grid-item" key={index}>
+//         <div className="att-grid-container" style={{ paddingBottom: '152px' }}>
+//           {filteredRooms.length !==0 && filteredRooms.map((room) => (
+//             <div className="att-grid-item" onClick={() => handlePopupOpen(room)}>
 //               <AttBlock
-//                 roomnum={room.roomnum}
-//                 name={room.name}
-//                 roll={room.roll}
-//                 present={room.present}
-//                 onAttendanceChange={handleAttendanceChange}
-//                 date={selectedDate}
+//                 key={room?.room_number}
+//                 room={room}
+//                 token={token}
 //               />
 //             </div>
 //           ))}
 //         </div>
+//         {popupVisible && selectedRoom && (
+//           <RoomPopup
+//             room={selectedRoom}
+//             token={token}
+//             onClose={handlePopupClose}
+//           />
+//         )}
 
 //       </div>
 //     </div>
