@@ -1,7 +1,7 @@
 import React, { useEffect, useState , useRef } from "react";
 import axios from "axios";
 
-const LeavesObj = ({ leave , token, studentName }) => {
+const LeavesObj = ({ leave , token }) => {
     
   return (
     <button className="leave-box">
