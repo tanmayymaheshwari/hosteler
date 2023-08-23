@@ -4,9 +4,27 @@
 // import 'react-datepicker/dist/react-datepicker.css';
 // import { FaCalendarDay,FaCircleNotch } from 'react-icons/fa';
 
-// const AttBlock = ({ room , token, handlePopupOpen }) => {
+// const AttBlock = ({ room , token , selectedDate, selectedFloor }) => {
 
 //   const [isHovered, setIsHovered] = useState(false);
+//   const [updatedDate, setUpdatedDate] = useState(selectedDate);
+//   const [currentDate, setCurrentDate] = useState(new Date());
+  
+//   // INDIVIDUAL ROOM SELECTION
+//   const [selectedRoom, setSelectedRoom] = useState(null);
+//   const [popupVisible, setPopupVisible] = useState(false);
+//   const [selectedStatus, setSelectedStatus] = useState(null);
+
+//   const handlePopupOpen = (room) => {
+//     setSelectedRoom(room);
+//     setPopupVisible(true);
+//     setSelectedStatus(room.status);
+//   };
+//   const handlePopupClose = () => {
+//     setSelectedRoom(null);
+//     setPopupVisible(false);
+//   };
+
 
 //   // Hovering on Attendance Tile
 //   const handleMouseEnter = () => {
@@ -15,6 +33,40 @@
 //   const handleMouseLeave = () => {
 //     setIsHovered(false);
 //   };
+
+//   // UPDATING the ATTENDANCE in the POPUP
+//   const handleAttendanceChange = async () => {
+//     try {
+//       const config = {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       };
+//       await axios.put(
+//         `https://hosteler-backend.onrender.com/base/attendance/update/${room.student}/`,
+//         { status: selectedStatus },
+//         config
+//         );
+//         handleRoomStatus(selectedStatus);
+//         handlePopupClose();
+//         handleMouseLeave();
+        
+        
+//       } catch (error) {
+//         console.error("Error approving leave:", error);
+//       }
+//     };
+//     const handleRoomStatus = async () => {
+//       room.status = selectedStatus
+//     }
+//     useEffect(() => {
+//     }, [selectedStatus]);
+    
+//     const areDatesEqual = (
+//     currentDate.getDate() === selectedDate.getDate() &&
+//     currentDate.getMonth() === selectedDate.getMonth() &&
+//     currentDate.getFullYear() === selectedDate.getFullYear()
+//   );
 
 //   return (
 //     <div className="att-box" onClick={() => handlePopupOpen(room)}
@@ -55,6 +107,47 @@
 //             </div>
 //           </div>
 //         )}
+//         {isHovered && room.occupancy_status === 'VACANT' && (
+//           <div className="hover-details">
+//             VACANT
+//           </div>
+//         )}
+
+//         {/* ATTENDANCE POPUP */}
+//         {popupVisible && areDatesEqual && room.occupancy_status !== 'VACANT' && (
+//           <div className="room-popup-content">
+//             <h1>ROOM NO</h1>
+//             <h2>{room.room_number}</h2>
+//             <div className="room-checkbox-options">
+//               <label>
+//                 <input
+//                   type="radio"
+//                   name={`status-${room.room_number}`}
+//                   value="PRESENT"
+//                   checked={selectedStatus === "PRESENT"}
+//                   onChange={() => setSelectedStatus("PRESENT")}
+//                 />
+//                 Present
+//               </label>
+//               <label>
+//                 <input
+//                   type="radio"
+//                   name={`status-${room.room_number}`}
+//                   value="ABSENT"
+//                   checked={selectedStatus === "ABSENT"}
+//                   onChange={() => setSelectedStatus("ABSENT")}
+//                 />
+//                 Absent
+//               </label>
+//             </div>
+//             <button className="room-btn btn-primary" onClick={handleAttendanceChange}>
+//               Update
+//             </button>
+//             <button className="room-btn btn-primary" onClick={handlePopupClose}>
+//               Close
+//             </button>
+//           </div>
+//         )}
 
 //       </div>
 //     </div>
@@ -62,77 +155,77 @@
 // };
 
 
-// const RoomPopup = ({ room, token, onClose, handleMouseLeave }) => {
+// // const RoomPopup = ({ room, token, onClose, handleMouseLeave }) => {
 
-//   const [selectedStatus, setSelectedStatus] = useState(room.status);
+// //   const [selectedStatus, setSelectedStatus] = useState(room.status);
 
-//   const handleAttendanceChange = async () => {
-//     try {
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       };
-//       await axios.put(
-//         `https://hosteler-backend.onrender.com/base/attendance/update/${room.student}/`,
-//         { status: selectedStatus },
-//         config
-//       );
+// //   const handleAttendanceChange = async () => {
+// //     try {
+// //       const config = {
+// //         headers: {
+// //           Authorization: `Bearer ${token}`,
+// //         },
+// //       };
+// //       await axios.put(
+// //         `https://hosteler-backend.onrender.com/base/attendance/update/${room.student}/`,
+// //         { status: selectedStatus },
+// //         config
+// //       );
       
-//       setRoomStatus(selectedStatus);
-//       onClose();
-//       handleMouseLeave();
+// //       setRoomStatus(selectedStatus);
+// //       onClose();
+// //       handleMouseLeave();
 
-//     } catch (error) {
-//       console.error("Error approving leave:", error);
-//     }
-//   };
+// //     } catch (error) {
+// //       console.error("Error approving leave:", error);
+// //     }
+// //   };
   
-//   const setRoomStatus = (newStatus) => {
-//     setSelectedStatus(newStatus);
-//   };
-//   useEffect(() => {
-//   }, [selectedStatus]);
+// //   const setRoomStatus = (newStatus) => {
+// //     setSelectedStatus(newStatus);
+// //   };
+// //   useEffect(() => {
+// //   }, [selectedStatus]);
 
-//   return (
-//     <div className="room-popup">
-//       <div className="room-popup-content">
-//         <h1>ROOM NO</h1>
-//         <h2>{room.room_number}</h2>
-//         <div className="room-checkbox-options">
+// //   return (
+// //     <div className="room-popup">
+// //       <div className="room-popup-content">
+// //         <h1>ROOM NO</h1>
+// //         <h2>{room.room_number}</h2>
+// //         <div className="room-checkbox-options">
 
-//           <label>
-//             <input
-//               type="radio"
-//               name={`status-${room.room_number}`}
-//               value="PRESENT"
-//               checked={selectedStatus  === 'PRESENT'}
-//               onChange={() => setSelectedStatus('PRESENT')}
-//             />
-//             Present
-//           </label>
+// //           <label>
+// //             <input
+// //               type="radio"
+// //               name={`status-${room.room_number}`}
+// //               value="PRESENT"
+// //               checked={selectedStatus  === 'PRESENT'}
+// //               onChange={() => setSelectedStatus('PRESENT')}
+// //             />
+// //             Present
+// //           </label>
 
-//           <label>
-//             <input
-//               type="radio"
-//               name={`status-${room.room_number}`}
-//               value="ABSENT"
-//               checked={selectedStatus  === 'ABSENT'}
-//               onChange={() => setSelectedStatus('ABSENT')}
-//             />
-//             Absent
-//           </label>
+// //           <label>
+// //             <input
+// //               type="radio"
+// //               name={`status-${room.room_number}`}
+// //               value="ABSENT"
+// //               checked={selectedStatus  === 'ABSENT'}
+// //               onChange={() => setSelectedStatus('ABSENT')}
+// //             />
+// //             Absent
+// //           </label>
 
-//         </div>
-//         <button className="room-btn btn-primary" onClick={handleAttendanceChange}>
-//           Update
-//         </button>
-//         <button className="room-btn btn-primary" onClick={onClose}>Close</button>
+// //         </div>
+// //         <button className="room-btn btn-primary" onClick={handleAttendanceChange}>
+// //           Update
+// //         </button>
+// //         <button className="room-btn btn-primary" onClick={onClose}>Close</button>
 
-//       </div>
-//     </div>
-//   );
-// };
+// //       </div>
+// //     </div>
+// //   );
+// // };
 
 // export const Attendance = () => {
 
@@ -143,7 +236,8 @@
 
 //   // ATTENDANCE GRID
 //   const [attGrid, setAttGrid] = useState([]);
-//   const [selectedFloor, setSelectedFloor] = useState('1ST FLOOR');
+//   // const [selectedFloor, setSelectedFloor] = useState('1ST FLOOR');
+//   const [selectedFloor, setSelectedFloor] = useState('GROUND');
 //   const [isLoading, setIsLoading] = useState(false);
 
 //   // NEW DATE SELECTION & FORMATTING
@@ -163,7 +257,8 @@
 //   };
 
 //   const [yesterdayDate, setYesterdayDate] = useState(getYesterdayDate());
-//   const [selectedDate, setSelectedDate] = useState(getYesterdayDate());
+//   // const [selectedDate, setSelectedDate] = useState(getYesterdayDate());
+//   const [selectedDate, setSelectedDate] = useState(todayDate);
 
 //   const formatDateToYYYYMMDD = (inputDate) => {
 //     const date = new Date(inputDate);
@@ -222,7 +317,7 @@
 //           })
 
 //           const roomsWithDetails = await Promise.all(roomsWithDetailsPromises);
-//           console.log(30,roomsWithDetails)
+//           // console.log(30,roomsWithDetails)
 
 //           const hostelRooms = [...vacantRooms, ...roomsWithDetails];
 //           hostelRooms.sort((a, b) => a.room_number - b.room_number);
@@ -258,21 +353,6 @@
 //     return true;
 //   });
 
-//   // INDIVIDUAL ROOM SELECTION
-//   const [selectedRoom, setSelectedRoom] = useState(null);
-//   const [popupVisible, setPopupVisible] = useState(false);
-
-//   const handlePopupOpen = (room) => {
-//     setSelectedRoom(room);
-//     setPopupVisible(true);
-//   };
-//   const handlePopupClose = () => {
-//     setSelectedRoom(null);
-//     setPopupVisible(false);
-//   };
-
-//   // NEW ATTENDANCE BUTTON
-//   const [dateAttendanceCreated, setDateAttendanceCreated] = useState(yesterdayDate);
 
 //   const handleNewAttendance = async () => {
 //     try {
@@ -286,11 +366,13 @@
 //         `https://hosteler-backend.onrender.com/base/attendance/create/`,
 //         config
 //         );
+//         setSelectedDate(todayDate);
+//         console.log(10, selectedDate);
 //     } catch (error) {
 //       console.error("Error creating new attendance:", error);
 //     }
 //   };
-  
+
 //   return (
 //     <div className="attendance">
 //       <div id="team" className="text-center">
@@ -300,15 +382,23 @@
 //           </div>
 //         </div>
 
-//         {/* <div className='new-att-button'>
-//           {dateAttendanceCreated === selectedDate ? (
-//             `New attendance has been created for ${formatDateToYYYYMMDD(new Date())}`
-//           ) : (
-//             <button onClick={handleNewAttendance}>
-//               Create New Attendance for {formatDateToYYYYMMDD(todayDate)}
-//             </button>
-//           )}
-//         </div> */}
+//         <div className='new-att-box'>
+//           {
+//             todayDate.getDate() === selectedDate.getDate() &&
+//             todayDate.getMonth() === selectedDate.getMonth() &&
+//             todayDate.getFullYear() === selectedDate.getFullYear() ? 
+//             (
+//               <div className='new-att-text'>
+//                 New attendance has been <br/>created for {formatDateToYYYYMMDD(new Date())}
+//               </div>
+//             ) : 
+//             (
+//               <button className="new-att-button" onClick={handleNewAttendance}>
+//                 Create New Attendance <br/>for {formatDateToYYYYMMDD(todayDate)}
+//               </button>
+//             )
+//           }
+//         </div>
 
 //         {/* CALENDAR */}
 //         <div className="date-picker">
@@ -317,7 +407,8 @@
 //             onChange={handleDateChange}
 //             selected={selectedDate}
 //             dateFormat="yyyy-MM-dd"
-//             maxDate={yesterdayDate}
+//             // maxDate={yesterdayDate}
+//             maxDate={todayDate}
 //           />
 //         </div>
 
@@ -365,22 +456,14 @@
 //                   key={room?.room_number}
 //                   room={room}
 //                   token={token}
-//                   status={room.status}
-//                   handlePopupOpen={handlePopupOpen}
+//                   selectedDate={selectedDate}
+//                   selectedFloor={selectedFloor}
 //                 />
 //               </div>
 //             ))}
 //           </div>
 //         )
 //         }
-
-//         {popupVisible && selectedRoom && (
-//           <RoomPopup
-//             room={selectedRoom}
-//             token={token}
-//             onClose={handlePopupClose}
-//           />
-//         )}
 
 //       </div>
 //     </div>

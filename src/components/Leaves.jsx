@@ -1,5 +1,6 @@
 import React, { useEffect, useState , useRef } from "react";
 import axios from "axios";
+import { FaCircleNotch } from 'react-icons/fa';
 
 const LeavesObj = ({ leave , token }) => {
     
@@ -147,6 +148,7 @@ export const Leaves = () => {
   // LEAVES and STATUS
   const [leaves, setLeaves] = useState([]);
   const [filterStatus, setFilterStatus] = useState("PENDING");
+  const [isLoading, setIsLoading] = useState(true);
 
   // SELECTED LEAVE POPUP
   const [selectedLeave, setSelectedLeave] = useState(null);
@@ -197,6 +199,7 @@ export const Leaves = () => {
       
         const leavesWithStudentName = await Promise.all(studentDataPromises);
         setLeaves(leavesWithStudentName);
+        setIsLoading(false);
         }
       catch (error) {
         console.error("Error fetching resource details:", error);
@@ -269,41 +272,50 @@ export const Leaves = () => {
         </div>
 
         <div className="leave-grid-container" style={{ paddingBottom: shouldApplyPadding ? '155px' : '0' }}>
-          {filteredLeaves.length !== 0 ? 
+          {
+            isLoading ? 
             (
-              <div className="leave-grid-container-inside">
-                {
-                  filteredLeaves.map((leave) => {
-                  const leaveDate = new Date(leave.created_at);
-                  const leaveMonth = String(leaveDate.getMonth() + 1).padStart(2, '0'); // Month is zero-based
-                  const leaveYear = leaveDate.getFullYear().toString();
-
-                  if (
-                    (!selectedMonth || selectedMonth === leaveMonth) &&
-                    (!selectedYear || selectedYear === leaveYear)
-                  ) {
-
-                    return (
-                      <div onClick={() => handlePopupOpen(leave)}>
-                        <LeavesObj
-                        key={leave?.leave_id}
-                        leave={leave}
-                        studentName={leave.studentName}
-                        token={token}
-                        />
-                      </div>
-                    );
-                  }
-                  return null;
-                  })
-                }
+              // LOADING SCREEN
+              <div className='leave-loading'>
+                <FaCircleNotch className="leave-loading-icon" />
               </div>
-            )
-            : 
-            (
-              <div className="no-leaves">NO LEAVES</div>
-            )
-          }
+            ) : (
+            filteredLeaves.length !== 0 ? 
+              (
+                <div className="leave-grid-container-inside">
+                  {
+                    filteredLeaves.map((leave) => {
+                    const leaveDate = new Date(leave.created_at);
+                    const leaveMonth = String(leaveDate.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+                    const leaveYear = leaveDate.getFullYear().toString();
+
+                    if (
+                      (!selectedMonth || selectedMonth === leaveMonth) &&
+                      (!selectedYear || selectedYear === leaveYear)
+                    ) {
+
+                      return (
+                        <div onClick={() => handlePopupOpen(leave)}>
+                          <LeavesObj
+                          key={leave?.leave_id}
+                          leave={leave}
+                          studentName={leave.studentName}
+                          token={token}
+                          />
+                        </div>
+                      );
+                    }
+                    return null;
+                    })
+                  }
+                </div>
+              )
+              : 
+              (
+                <div className="no-leaves">NO LEAVES</div>
+              )
+            
+          )}
         </div>
 
         {popupVisible && selectedLeave && (

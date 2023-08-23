@@ -1,6 +1,6 @@
 import React, { useEffect, useState , useRef } from "react";
 import axios from "axios";
-import { FaPen, FaSave, FaTimes } from "react-icons/fa";
+import { FaPen, FaSave, FaTimes, FaCircleNotch } from "react-icons/fa";
 
 const ResObj = ({ resource , token }) => {
 
@@ -306,6 +306,7 @@ export const Resources = () => {
   const [resourcesArray, setResourcesArray] = useState([]);
   const [resourcePopupOpen, setResourcePopupOpen] = useState(false);
   const [filterResource, setFilterResource] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleFilterChange = (e) => {
     setFilterResource(e.target.value);
@@ -324,6 +325,7 @@ export const Resources = () => {
         );
         setResourcesArray(response.data);
         console.log(10,response.data);
+        setIsLoading(false);
     }
     catch (error) {
       console.error("Error fetching resource details:", error);
@@ -381,14 +383,23 @@ export const Resources = () => {
 
         <div className="resource-section">        
           {
-            filteredResources.length !== 0 &&
-            filteredResources.map((resource) =>  (
-              <ResObj
-                key={resource?.resource_id}
-                resource={resource}
-                token={token}
-              />
-            ))
+            isLoading ? 
+            (
+              // LOADING SCREEN
+              <div className='res-loading'>
+                <FaCircleNotch className="res-loading-icon" />
+              </div>
+            ) : 
+            (
+              filteredResources.length !== 0 &&
+              filteredResources.map((resource) =>  (
+                <ResObj
+                  key={resource?.resource_id}
+                  resource={resource}
+                  token={token}
+                />
+              ))
+            )
           } 
         </div>
         {/* Render the popup for registering a resource */}

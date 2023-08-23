@@ -1,7 +1,9 @@
 import React , { useEffect, useState , useRef } from "react";
 import axios from "axios";
+import { FaCircleNotch } from 'react-icons/fa';
 
-const StudBlock = ({ student , token , roomNumber }) => {
+const StudBlock = ({ student , token }) => {
+
   return (
     <div className="stud-box">
       <div className="stud-container">
@@ -38,21 +40,12 @@ const StudBlock = ({ student , token , roomNumber }) => {
   );
 };
 
-const Popup = ({
-  name,
-  roll,
-  dateOfBirth,
-  address,
-  roomNumber,
-  phoneNumber,
-  bloodGroup,
-  studentPopupPhoto,
-  course,
-  parentName,
-  parentContactNum,
-  parentEmail,
-  onClose
-  }) => {
+// INDIVIDUAL STUDENT DETAIL POPUP
+
+const Popup = ({ name,roll, dateOfBirth, address, roomnum, phoneNumber, bloodGroup,
+                 studentPopupPhoto, course, parentName, parentContactNum, parentEmail,
+                 onClose, token }) => {
+
   return (
     <div className="stud-popup">
       <div className="stud-popup-content">
@@ -60,7 +53,7 @@ const Popup = ({
           <img src={studentPopupPhoto} className="studentPopupPhoto" alt="Student Photo" />
           <h3>{name}</h3>
           <p>Roll Number: {roll}</p>
-          <p>Room Number: {roomNumber}</p>
+          <p>Room Number: {roomnum}</p>
           <p>Phone Number: {phoneNumber}</p>
           <p>Course: {course}</p>
           <p>Date of Birth: {dateOfBirth}</p>
@@ -80,27 +73,11 @@ const Popup = ({
   );
 };
 
-const RegPopup = ({
-  first_name, 
-  last_name, 
-  date_of_birth, 
-  gender, 
-  address, 
-  contact_number, 
-  blood_group, 
-  photo, 
-  roll_number, 
-  email_address, 
-  batch, 
-  department, 
-  course, 
-  parent_first_name, 
-  parent_last_name, 
-  parent_email, 
-  parent_contact_number,
-  onClose,
-  registerMode
-  }) => {
+const RegPopup = ({ first_name, last_name, date_of_birth, gender, address, contact_number,
+                    blood_group, photo, roll_number, email_address, batch, department, course,
+                    parent_first_name, parent_last_name, parent_email, parent_contact_number,
+                    onClose, registerMode }) => {
+
   const [formData, setFormData] = useState({
     first_name: "", 
     last_name: "", 
@@ -131,18 +108,15 @@ const RegPopup = ({
     try {
       const response = await axios.post("https://hosteler-backend.onrender.com/base/student/create/", formData, {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token if you need authentication
+          Authorization: `Bearer ${token}`,
         },
       });
 
-      // Handle the response from the backend if needed
       console.log("Form data sent successfully:", response.data);
-
-      // Optionally, you can close the popup or perform any other actions here
       onClose();
       window.location.reload();
+
     } catch (error) {
-      // Handle any errors that occur during the request
       console.error("Error sending form data:", error);
     }
   };
@@ -208,34 +182,26 @@ const RegPopup = ({
           />
           <label htmlFor="blood_group">Blood Group:</label>
           <div>
-          <select
-            id="blood_group"
-            name="blood_group"
-            value={formData.blood_group}
-            onChange={handleChange}
-            required
-          >
+            <select
+              id="blood_group"
+              name="blood_group"
+              value={formData.blood_group}
+              onChange={handleChange}
+              required
+            >
 
-            <option value="">Select a blood group</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-          </select>
-            </div>
-          {/* <label htmlFor="roomnum">Room Number:</label>
-          <input
-            type="text"
-            id="roomnum"
-            name="roomnum"
-            value={formData.roomnum}
-            onChange={handleChange}
-            required
-          /> */}
+              <option value="">Select a blood group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+
           <label htmlFor="photo">Student Photo:</label>
           <input
             type="file"
@@ -350,6 +316,7 @@ export const Students = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [registerPopupOpen, setRegisterPopupOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // FETCH STUDENT DETAILS from the API
   const fetchStudents = async () => {
@@ -381,11 +348,10 @@ export const Students = () => {
               roomNumber: room.room_number
             };
           } catch (error) {
-            // Handle 404 error gracefully
             if (error.response && error.response.status === 404) {
               return {
                 ...student,
-                roomNumber: "Not Allotted" // Set a custom value for students without rooms
+                roomNumber: "Not Allotted"
               };
             }
             throw error;
@@ -397,6 +363,7 @@ export const Students = () => {
   
       const studentWithRoom = await Promise.all(roomDataPromises);
       setStudentGrid(studentWithRoom);
+      setIsLoading(false);
       console.log(studentGrid);
     } catch (error) {
       console.error("Error fetching resource details:", error);
@@ -469,7 +436,14 @@ export const Students = () => {
         </div>
 
         <div>
-          {filteredStudents.length !== 0 ? (
+        {isLoading ? 
+        (
+          // LOADING SCREEN
+          <div className='stud-loading'>
+            <FaCircleNotch className="stud-loading-icon" />
+          </div>
+        ) : (
+          filteredStudents.length !== 0 ? (
             <div
               className="stud-grid-container" 
                 style={{ paddingBottom: shouldApplyPadding ? '107px' : '0'
@@ -490,16 +464,17 @@ export const Students = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            <div
-              className="no-student-cont" 
-              style={{ 
-                paddingBottom: '260px'
-              }}>
-                NO STUDENTS
-            </div> 
+            ) : (
+              <div
+                className="no-student-cont" 
+                style={{ 
+                  paddingBottom: '260px'
+                }}>
+                  NO STUDENTS
+              </div> 
+            )
           )
-          }
+        }
         </div>
           
         
@@ -546,6 +521,7 @@ export const Students = () => {
             parentContactNum={selectedStudent.parent_contact_number}
             parentEmail={selectedStudent.parent_email}
             onClose={handleClosePopup}
+            token={token}
           />
         )}
 

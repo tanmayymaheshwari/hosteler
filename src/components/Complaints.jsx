@@ -1,6 +1,6 @@
 import React, { useEffect, useState , useRef } from "react";
 import axios from "axios";
-import { FaCheck , FaWindowClose } from "react-icons/fa";
+import { FaCheck , FaWindowClose, FaCircleNotch } from "react-icons/fa";
 
 const CompObj = ({ complaint , token }) => {
 
@@ -9,13 +9,16 @@ const CompObj = ({ complaint , token }) => {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
 
   const handleStatusChange = async () => {
-    console.log(10)
+    if(complaintStatus === "RESOLVED")
+      return;
+    
     let newStatus;
     if (complaintStatus === "PENDING") {
       newStatus = "IN_PROGRESS";
     } else if (complaintStatus === "IN_PROGRESS") {
       newStatus = "RESOLVED";
-    } else {
+    } 
+    else {
       newStatus = "PENDING";
     }
     setComplaintStatus(newStatus);
@@ -26,11 +29,13 @@ const CompObj = ({ complaint , token }) => {
   const openImagePopup = () => {
     setIsImagePopupOpen(true);
   };
-
   const closeImagePopup = () => {
     setIsImagePopupOpen(false);
   };
-  console.log(complaint)
+  const formatDate = (date) => {
+    const formattedDate = new Date(date);
+    return formattedDate.toISOString().split('T')[0];
+  };
 
   // UPDATE COMPLAINTS in the BACKEND
   const updateComplaintStatus = async (id, newStatus) => {
@@ -42,11 +47,6 @@ const CompObj = ({ complaint , token }) => {
         },
       };
       const response = await axios.put(
-        // {
-        //   validateStatus: function (status) {
-        //     return status < 500; // Resolve only if the status code is less than 500
-        //   }
-        // }
         `https://hosteler-backend.onrender.com/base/complaint/update/${id}/`,
         { status: newStatus },
         config
@@ -82,7 +82,7 @@ const CompObj = ({ complaint , token }) => {
             <ul>{complaint.category}</ul>
             <ul>{complaint.student}</ul>
             <ul>{complaint.location}</ul>
-            <ul>{complaint.created_at}</ul>
+            <ul>{formatDate(complaint.created_at)}</ul>
             <ul>{complaintStatus}</ul>
           </div>
 
@@ -145,6 +145,7 @@ export const Complaints = () => {
   const [complaints, setComplaints] = useState([]);
   const [filterStatus, setFilterStatus] = useState("All");
   const [sortOrder, setSortOrder] = useState("Latest");
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleFilterChange = (e) => {
     setFilterStatus(e.target.value);
@@ -165,6 +166,7 @@ export const Complaints = () => {
           `https://hosteler-backend.onrender.com/base/complaint/list/`,config
           );
           setComplaints(response.data);
+          setIsLoading(false);
         }
       catch (error) {
         console.error("Error fetching resource details:", error);
@@ -227,7 +229,16 @@ export const Complaints = () => {
         </div>
 
         <div className="complaint-section">
-          { sortedComplaints.length !== 0 ? (
+        {
+          isLoading ? 
+          (
+            // LOADING SCREEN
+            <div className='comp-loading'>
+              <FaCircleNotch className="comp-loading-icon" />
+            </div>
+          ) : 
+          ( 
+            sortedComplaints.length !== 0 ? (
             sortedComplaints.map((complaint) => (
             <CompObj
               key={complaint?.complaint_id}
@@ -235,10 +246,10 @@ export const Complaints = () => {
               token={token}
               // onUpdateStatus={handleUpdateStatus}
             />
-          ))
-        ) : (
-          <div>NO COMPLAINTS</div>
-        )}
+            ))
+            ):( <div>NO COMPLAINTS</div> )
+          )
+        }
         </div>
 
       </div>

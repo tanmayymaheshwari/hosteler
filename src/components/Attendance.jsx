@@ -382,19 +382,19 @@ export const Attendance = () => {
           </div>
         </div>
 
-        <div className='new-att-button'>
+        <div className='new-att-box'>
           {
             todayDate.getDate() === selectedDate.getDate() &&
             todayDate.getMonth() === selectedDate.getMonth() &&
             todayDate.getFullYear() === selectedDate.getFullYear() ? 
             (
-              <div>
-                New attendance has been created for {formatDateToYYYYMMDD(new Date())}
+              <div className='new-att-text'>
+                New attendance has been <br/>created for {formatDateToYYYYMMDD(new Date())}
               </div>
             ) : 
             (
-              <button onClick={handleNewAttendance}>
-                Create New Attendance for {formatDateToYYYYMMDD(todayDate)}
+              <button className="new-att-button" onClick={handleNewAttendance}>
+                Create New Attendance <br/>for {formatDateToYYYYMMDD(todayDate)}
               </button>
             )
           }
