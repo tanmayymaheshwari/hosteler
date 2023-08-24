@@ -110,8 +110,9 @@ const LeavePopup = ({ leave, token, onClose }) => {
           </div>
         )}
         {leave.status === "APPROVED" && (
-          <div>
-            Leave has been APPROVED
+          <div className="approved-leave">
+            Leave has been APPROVED <br />
+            Associated Rebate is Rs {leave.rebate_associated}/-
           </div>
         )}
         {leave.status === "REJECTED" && (

@@ -48,8 +48,9 @@ const ResObj = ({ resource , token }) => {
       damaged_count: tempDamaged,
     };
     try {
-      await handleResourceUpdate(updatedResource); // Wait for the update to finish
-      setIsEditing(false); // Set editing to false only after the update is done
+      await handleResourceUpdate(updatedResource);
+
+      setIsEditing(false);
       setCount(tempCount);
       setCorrect(tempCorrect);
       setDamaged(tempDamaged);
@@ -81,13 +82,15 @@ const ResObj = ({ resource , token }) => {
       <div className="res-container">
         {/* RESOURCE IMAGE */}
         <div className="left-res-block">
+
           <div className="res-image">
-          <img src={`https://hosteler-backend.onrender.com/media/images/tubelight.jpg`} 
-          className="resimg" alt="resource" />
+            <img src={resource?resource.resource_photo?.substr(13): ""} className="resimg" alt="resource" />
+            {console.log(12,resource.resource_photo)}
           </div>
           <div>
             {resource.description}
           </div>
+
         </div>
 
         {/* RESOURCE DETAILS */}
@@ -158,16 +161,8 @@ const ResObj = ({ resource , token }) => {
   );
 };
 
-const ResourcePopup = ({
-  name,
-  resource_type,
-  resource_photo, 
-  correct_count, 
-  damaged_count, 
-  description,
-  onClose,
-  registerMode
-  }) => {
+const ResourcePopup = ({ name, resource_type, resource_photo, correct_count, damaged_count, description,
+                         onClose, registerMode }) => {
     const [formData, setFormData] = useState({
     name: "",
     resource_type: "",
@@ -177,30 +172,36 @@ const ResourcePopup = ({
     description: "",
     });
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    const handleChange = (event) => {
+      const { name, value } = event.target;
+      setFormData((prevState) => ({ ...prevState, [name]: value }));
+    };
+
+    const handleSubmit = async (event,token) => {
+      event.preventDefault();
+      const fdata = new FormData()
+      for (let key of Object.keys(formData))
+      {
+          fdata.append(key,formData[key])
+      }
+      try {
+        const url = "https://hosteler-backend.onrender.com/base/resource/create/"
+        // const url = "https://0.0.0.0:8000/base/resource/create/"
+        const response = await axios.post(url, fdata, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("Form data sent successfully:", response.data);
+        onClose();
+        window.location.reload();
+
+      } catch (error) {
+        console.error("Error sending form data:", error);
+      }
   };
 
-  const handleSubmit = async (event,token) => {
-    event.preventDefault();
-    try {
-      // Make an HTTP POST request to the backend to save the form data
-      const response = await axios.post("https://hosteler-backend.onrender.com/base/resource/create/", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the token if you need authentication
-        },
-      });
-
-      // Handle the response from the backend if needed
-      console.log("Form data sent successfully:", response.data);
-      onClose();
-      window.location.reload();
-    } catch (error) {
-      // Handle any errors that occur during the request
-      console.error("Error sending form data:", error);
-    }
-  };
   return (
     <div className="res-reg-popup">
       <div className="res-reg-popup-content">
@@ -248,9 +249,15 @@ const ResourcePopup = ({
             type="file"
             id="resource_photo"
             name="resource_photo"
-            value={formData.resource_photo}
-            onChange={handleChange}
-            // required
+            defaultValue={formData.resource_photo}
+            onChange={
+              (e)=>{
+                console.log(e.target.files[0])
+                setFormData((prev) => ({ ...prev, resource_photo: e.target.files[0]}))
+                console.log(formData)
+            }
+            }
+            required
           />
 
           <label htmlFor="correct_count">Correct Count:</label>
@@ -402,6 +409,7 @@ export const Resources = () => {
             )
           } 
         </div>
+
         {/* Render the popup for registering a resource */}
         {resourcePopupOpen && (
           < ResourcePopup

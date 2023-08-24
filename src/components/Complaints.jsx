@@ -102,7 +102,8 @@ const CompObj = ({ complaint , token }) => {
 
             {complaint.photo && (
               <div className="image-preview" onClick={openImagePopup}>
-                <img src={complaint.photo} className="complaint.photo" alt="Attached Photo" />
+                <img src={complaint?complaint.photo?.substr(13): ""} className="complaint.photo" alt="Attached Photo" />
+                {console.log(12,complaint.photo)}
               </div>
             )}
 

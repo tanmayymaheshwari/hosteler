@@ -42,6 +42,7 @@ const AttBlock = ({ room , token , selectedDate, selectedFloor }) => {
           Authorization: `Bearer ${token}`,
         },
       };
+      console.log(10)
       await axios.put(
         `https://hosteler-backend.onrender.com/base/attendance/update/${room.student}/`,
         { status: selectedStatus },
@@ -50,7 +51,7 @@ const AttBlock = ({ room , token , selectedDate, selectedFloor }) => {
         handleRoomStatus(selectedStatus);
         handlePopupClose();
         handleMouseLeave();
-        
+        console.log(selectedStatus)
         
       } catch (error) {
         console.error("Error approving leave:", error);

@@ -603,6 +603,9 @@ input[type="password"] {
 .status_approved {
   background-color: #d2f6c6;
 }
+.approved-leave {
+  font-size: 20px;
+}
 .status_rejected {
   background-color: #ffcbbe;
 }

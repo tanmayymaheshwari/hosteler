@@ -10,7 +10,7 @@ const StudBlock = ({ student , token }) => {
       <div className="stud-details">
 
         <div className="stud-photo">
-          <img src={student.photo} className="studentPhoto" alt="Student Photo" />
+          <img src={student?student.photo?.substr(13): ""} className="studentPhoto" alt="Student Photo" />
         </div>
 
         <div className="stud-details-text">
@@ -105,8 +105,14 @@ const RegPopup = ({ first_name, last_name, date_of_birth, gender, address, conta
 
   const handleSubmit = async (event,token) => {
     event.preventDefault();
+    const fdata = new FormData()
+    for (let key of Object.keys(formData))
+    {
+        fdata.append(key,formData[key])
+    }
     try {
-      const response = await axios.post("https://hosteler-backend.onrender.com/base/student/create/", formData, {
+      const url = "https://hosteler-backend.onrender.com/base/student/create/"
+      const response = await axios.post(url, fdata, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -117,7 +123,7 @@ const RegPopup = ({ first_name, last_name, date_of_birth, gender, address, conta
       window.location.reload();
 
     } catch (error) {
-      console.error("Error sending form data:", error);
+      console.log("Error sending form data:", error);
     }
   };
 
@@ -207,9 +213,15 @@ const RegPopup = ({ first_name, last_name, date_of_birth, gender, address, conta
             type="file"
             id="photo"
             name="photo"
-            value={formData.photo}
-            onChange={handleChange}
-            // required
+            defaultValue={formData.photo}
+            onChange={
+              (e)=>{
+                console.log(e.target.files[0])
+                setFormData((prev) => ({ ...prev, photo: e.target.files[0]}))
+                console.log(formData)
+            }
+            }
+            required
           />
           <label htmlFor="roll_number">Roll No:</label>
           <input
@@ -333,7 +345,6 @@ export const Students = () => {
       );
   
       const studentData = response.data;
-  
       const roomDataPromises = studentData.map(async student => {
         if (student.roll_number) {
           try {
@@ -364,7 +375,7 @@ export const Students = () => {
       const studentWithRoom = await Promise.all(roomDataPromises);
       setStudentGrid(studentWithRoom);
       setIsLoading(false);
-      console.log(studentGrid);
+      console.log(studentWithRoom);
     } catch (error) {
       console.error("Error fetching resource details:", error);
     }
@@ -515,7 +526,7 @@ export const Students = () => {
             roomnum={selectedStudent.roomNumber}
             phoneNumber={selectedStudent.contact_number}
             bloodGroup={selectedStudent.blood_group}
-            studentPopupPhoto={selectedStudent.photo}
+            studentPopupPhoto={selectedStudent?selectedStudent.photo?.substr(13): ""}
             course={selectedStudent.course}
             parentName={selectedStudent.parent_first_name+" "+selectedStudent.parent_last_name}
             parentContactNum={selectedStudent.parent_contact_number}
