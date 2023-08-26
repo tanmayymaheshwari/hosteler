@@ -100,7 +100,7 @@ const CompObj = ({ complaint , token }) => {
               <FaCheck className="tick" />
             </button>
 
-            {complaint.photo && (
+            {/* {complaint.photo && (
               <div className="image-preview" onClick={openImagePopup}>
                 <img src={complaint?complaint.photo?.substr(13): ""} className="complaint.photo" alt="Attached Photo" />
                 {console.log(12,complaint.photo)}
@@ -112,7 +112,7 @@ const CompObj = ({ complaint , token }) => {
                 <div>NO PHOTO</div>
                 <div>ATTACHED</div>
               </div>
-            )}
+            )} */}
 
           </div>
         </div>

@@ -10,7 +10,6 @@ import { Students } from "./components/Students";
 import { Resources } from "./components/Resources";
 import { Complaints } from "./components/Complaints";
 import { Mess } from "./components/Mess";
-// import { Settings } from "./components/Settings";
 
 import "./App.css";
 import JsonData from "./data/data.json";

@@ -269,6 +269,10 @@ header .intro-text {
   font-size: 35px;
   color: #353434;
   font-weight: 500;
+  opacity: 0;
+  transform: translateY(100%);
+  animation: swipeUp 1s forwards;
+  animation-delay: 0.5s;
 }
 .abv-iiitm {
   font-size: 80px;
@@ -276,9 +280,20 @@ header .intro-text {
 .landing-hms {
   color: #343434;
 }
+@keyframes swipeUp {
+  0% {
+    opacity: 0;
+    font-size: 20px;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* Features Section */
-#features {
+/* #features {
   background: #f6f6f6;
 }
 #features i.fa {
@@ -292,7 +307,7 @@ header .intro-text {
   border-radius: 50%;
   background: linear-gradient(to right, #6372ff 0%, #5ca9fb 100%);
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
-}
+} */
 
 /*/////////////////////////////////   HEADER   ///////////////////////////////////////*/
 
@@ -364,7 +379,7 @@ header .intro-text {
 .loginpage {
   font-family: sans-serif;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-
+  background: url(../img/hostel_bg.png) center center no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -373,7 +388,6 @@ header .intro-text {
   height: 100vh;
   width: 100vw;
   background-color: #E5E5E5;
-  background-image: url(../images/hostel_bg.png);
   background-size: cover;
 }
 
@@ -389,7 +403,7 @@ header .intro-text {
   height: 150px;
   align-items: end;
   border-radius:  0 150px 0 0;
-  background-color: #AFF0F0;
+  background-color: #d8d8d8;
 }
 .circleLeftOutLogin {
   width: 250px;
@@ -397,7 +411,7 @@ header .intro-text {
   display: flex;
   align-items: end;
   border-radius: 0 250px 0 0;
-  background-color: #d1ebeb;
+  background-color: #d8d8d8;
 }
 
 /* RIGHT PARTITION */
@@ -411,7 +425,7 @@ header .intro-text {
   width: 150px;
   height: 150px;
   border-radius: 0 0 0 150px;
-  background-color: #AFF0F0;
+  background-color: #d8d8d8;
 }
 .circleRightOutLogin {
   width: 250px;
@@ -419,7 +433,7 @@ header .intro-text {
   display: flex;
   justify-content: end;
   border-radius: 0 0 0 250px;
-  background-color: #d1ebeb;
+  background-color: #d8d8d8;
 }
 
 /* MIDDLE PARTITION */
@@ -437,7 +451,7 @@ header .intro-text {
   align-items: center;
   justify-content: center;
 
-  background-color: #AFF0F0;
+  background-color: rgb(61, 61, 61, 0.6);
   border-radius: 1000px;
   margin-bottom: 60px;
 }
@@ -450,12 +464,11 @@ header .intro-text {
 
 /* LOGIN BOX */
 .login-form {
-  background-color: #AFF0F0;
-  box-shadow: 0 16px 20px #808080;
-  height: 150px;
-  width: 250px;
-  border-radius: 30px;
-  padding: 2rem;
+  background-color: rgb(61, 61, 61, 0.6);
+  height: 190px;
+  width: 300px;
+  border-radius: 20px;
+  padding-top: 30px;
   
   display: flex;
   align-items: center;
@@ -480,12 +493,13 @@ input[type="password"] {
 .button-container {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .login {
   height: 36px;
   width: 96px;
   margin-top: 16px;
-  padding: 8px 16px;
+  padding: 0px;
 
   cursor: pointer;
   font-size: 16px;
@@ -497,7 +511,7 @@ input[type="password"] {
   box-shadow: 0px 5px 4px #808080;
 }
 .login:hover {
-  background: #A9EED1;
+  background: #517163;
   box-shadow: none;
 }
 
@@ -604,7 +618,7 @@ input[type="password"] {
   background-color: #d2f6c6;
 }
 .approved-leave {
-  font-size: 20px;
+  font-size: 20Fpx;
 }
 .status_rejected {
   background-color: #ffcbbe;
@@ -1595,7 +1609,12 @@ input[type="password"] {
   border-radius: 30%;
 }
 
-
+.page-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 .room-popup {
   position: fixed;
   top: 0;

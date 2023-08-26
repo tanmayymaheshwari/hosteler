@@ -117,8 +117,8 @@ const AttBlock = ({ room , token , selectedDate, selectedFloor }) => {
         {/* ATTENDANCE POPUP */}
         {popupVisible && areDatesEqual && room.occupancy_status !== 'VACANT' && (
           <div className="room-popup-content">
-            <h1>ROOM NO</h1>
-            <h2>{room.room_number}</h2>
+            {/* <h1>ROOM NO</h1>
+            <h2>{room.room_number}</h2> */}
             <div className="room-checkbox-options">
               <label>
                 <input
@@ -155,78 +155,6 @@ const AttBlock = ({ room , token , selectedDate, selectedFloor }) => {
   );
 };
 
-
-// const RoomPopup = ({ room, token, onClose, handleMouseLeave }) => {
-
-//   const [selectedStatus, setSelectedStatus] = useState(room.status);
-
-//   const handleAttendanceChange = async () => {
-//     try {
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       };
-//       await axios.put(
-//         `https://hosteler-backend.onrender.com/base/attendance/update/${room.student}/`,
-//         { status: selectedStatus },
-//         config
-//       );
-      
-//       setRoomStatus(selectedStatus);
-//       onClose();
-//       handleMouseLeave();
-
-//     } catch (error) {
-//       console.error("Error approving leave:", error);
-//     }
-//   };
-  
-//   const setRoomStatus = (newStatus) => {
-//     setSelectedStatus(newStatus);
-//   };
-//   useEffect(() => {
-//   }, [selectedStatus]);
-
-//   return (
-//     <div className="room-popup">
-//       <div className="room-popup-content">
-//         <h1>ROOM NO</h1>
-//         <h2>{room.room_number}</h2>
-//         <div className="room-checkbox-options">
-
-//           <label>
-//             <input
-//               type="radio"
-//               name={`status-${room.room_number}`}
-//               value="PRESENT"
-//               checked={selectedStatus  === 'PRESENT'}
-//               onChange={() => setSelectedStatus('PRESENT')}
-//             />
-//             Present
-//           </label>
-
-//           <label>
-//             <input
-//               type="radio"
-//               name={`status-${room.room_number}`}
-//               value="ABSENT"
-//               checked={selectedStatus  === 'ABSENT'}
-//               onChange={() => setSelectedStatus('ABSENT')}
-//             />
-//             Absent
-//           </label>
-
-//         </div>
-//         <button className="room-btn btn-primary" onClick={handleAttendanceChange}>
-//           Update
-//         </button>
-//         <button className="room-btn btn-primary" onClick={onClose}>Close</button>
-
-//       </div>
-//     </div>
-//   );
-// };
 
 export const Attendance = () => {
 
@@ -385,19 +313,22 @@ export const Attendance = () => {
 
         <div className='new-att-box'>
           {
-            todayDate.getDate() === selectedDate.getDate() &&
-            todayDate.getMonth() === selectedDate.getMonth() &&
-            todayDate.getFullYear() === selectedDate.getFullYear() ? 
-            (
-              <div className='new-att-text'>
-                New attendance has been <br/>created for {formatDateToYYYYMMDD(new Date())}
-              </div>
-            ) : 
-            (
-              <button className="new-att-button" onClick={handleNewAttendance}>
-                Create New Attendance <br/>for {formatDateToYYYYMMDD(todayDate)}
-              </button>
-            )
+            // todayDate.getDate() === selectedDate.getDate() &&
+            // todayDate.getMonth() === selectedDate.getMonth() &&
+            // todayDate.getFullYear() === selectedDate.getFullYear() ? 
+            // (
+            //   <div className='new-att-text'>
+            //     New attendance has been <br/>created for {formatDateToYYYYMMDD(new Date())}
+            //   </div>
+            // ) : 
+            // (
+            //   <button className="new-att-button" onClick={handleNewAttendance}>
+            //     Create New Attendance <br/>for {formatDateToYYYYMMDD(todayDate)}
+            //   </button>
+            // )
+            <div className='new-att-text'>
+               New attendance has been <br/>created for {formatDateToYYYYMMDD(new Date())}
+            </div>
           }
         </div>
 
